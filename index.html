@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>JIP servicios de ingenieria | Fibra y Radio en Piedecuesta & Mesa de los Santos</title>
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+            color: #1f1f1f;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* HEADER / NAV */
+        header {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero con imagen de fondo */
+        .hero {
+            position: relative;
+            min-height: 85vh;
+            background-image: url(assets/hero.png);
+            background-size: cover;
+            background-position: center right;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 24px 100px;
+        }
+        /* Capa oscura para legibilidad */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(252, 252, 252, 0.178);
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(18, 18, 18, 0.274);
+            backdrop-filter: blur(8px);
+            border-radius: 48px;
+            padding: 48px 32px;
+            border: 1px solid rgba(255, 213, 0, 0);
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .hero h1 span {
+            color: #FFD600;
+            border-bottom: 3px solid #FFA000;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 32px;
+            color: #f0f0f0;
+        }
+        .cobertura-busqueda {
+            background: #1e1e1e;
+            border-radius: 60px;
+            padding: 6px 6px 6px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid #ffa20000;
+        }
+        .cobertura-busqueda input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px 0;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        .cobertura-busqueda button {
+            background: #FFA000;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #121212;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .cobertura-busqueda button:hover {
+            background: #FFD600;
+        }
+        #resultadoCobertura {
+            margin-top: 20px;
+            font-weight: 500;
+            color: #FFD600;
+        }
+
+        /* Canvas: ondas con origen en la antena (punto fijo relativo) */
+        .hero-canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        canvas#heroWaveCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Navegación */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 32px;
+            flex-wrap: wrap;
+            background: #0a0a0a;        /* negro sólido, sin transparencias */
+            margin: 0;                  /* sin margen exterior */
+            position: relative;
+            z-index: 20;
+            margin-top: 8px;
+            /* eliminamos border-radius, border-bottom y backdrop-filter */
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo img {
+            height: 68px;
+            width: auto;
+        }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .brand-name {
+            font-weight: 800;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #FFD600, #FFA000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .brand-sub {
+            font-size: 0.75rem;
+            color: #FFA000;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: #eee;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .nav-links a:hover {
+            color: #FFD600;
+        }
+        .btn-cta-nav {
+            background: #1F1F1F;
+            color: #FF6F00 !important;
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: 1px solid #FFA000;
+            font-weight: 600;
+        }
+        .btn-cta-nav:hover {
+            background: #FFA000 !important;
+            color: #121212 !important;
+        }
+
+        /* Botón hamburguesa: oculto por defecto en escritorio */
+        .menu-hamburguesa {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #FFD600;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* SECCIONES GENERALES (fondo blanco) */
+        section {
+            padding: 80px 0;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 48px;
+            color: #1f1f1f;
+            position: relative;
+        }
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #FFA000;
+            margin: 12px auto 0;
+            border-radius: 4px;
+        }
+
+        /* SERVICIOS: dos columnas */
+        .services-two-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: stretch;
+        }
+        .accordion-col {
+            flex: 1.2;
+            min-width: 280px;
+        }
+        .calculator-col {
+            flex: 0.8;
+            min-width: 260px;
+            background: #fafafa;
+            border-radius: 32px;
+            padding: 28px;
+            border: 2px dashed #FFA000;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .calculator-col h3 {
+            color: #FF6F00;
+            margin-bottom: 16px;
+        }
+        .calculator-col p {
+            color: #555;
+        }
+        /* Tarjetas desplegables (negras transparentes) */
+        .services-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .service-item {
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 28px;
+            border: 1px solid #FFA000;
+            overflow: hidden;
+            backdrop-filter: blur(2px);
+        }
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.7);
+            transition: 0.2s;
+        }
+        .service-header:hover {
+            background: rgba(0,0,0,0.9);
+        }
+        .service-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #FFD600;
+        }
+        .service-title i {
+            color: #FFA000;
+        }
+        .toggle-icon {
+            font-size: 1.5rem;
+            color: #FFA000;
+            margin-right: 48px;
+        }
+        .service-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            padding: 0 24px;
+            background: rgba(0,0,0,0.8);
+            color: #f0f0f0;
+            text-align: justify;   /* ← Línea agregada */
+            text-justify: inter-word;
+        }
+        .service-content.show {
+            max-height: 400px;
+            padding: 20px 24px 28px;
+        }
+        .btn-wa {
+            background: #1F1F1F;
+            color: #FF6F00;
+            border: 1px solid #FFA000;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 12px;
+            transition: 0.2s;
+        }
+        .btn-wa:hover {
+            background: #FFA000;
+            color: #121212;
+        }
+        /* Estilos del formulario de cotización */
+        .cotizacion-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .cotizacion-form input,
+        .cotizacion-form select,
+        .cotizacion-form textarea {
+            width: 100%;
+            padding: 12px 24px 12px 15px;
+            border-radius: 30px;
+            border: 1px solid #ccc;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            background-color: #fff;
+            transition: 0.2s;
+            margin-right: 48px;  /* o el valor que gustes */
+        }
+        .cotizacion-form input:focus,
+        .cotizacion-form select:focus,
+        .cotizacion-form textarea:focus {
+            border-color: #FFA000;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 160, 0, 0.2);
+        }
+        .btn-cotizar {
+            background: #1F1F1F;
+            color: #FF6F00;
+            border: 1px solid #FFA000;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 5px;
+        }
+        .btn-cotizar:hover {
+            background: #FFA000;
+            color: #121212;
+        }
+        .form-nota {
+            font-size: 0.7rem;
+            color: #777;
+            margin-top: 12px;
+            text-align: center;
+        }
+        /* COBERTURA: dos columnas intercambiadas */
+        .coverage-two-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        .video-col {
+            flex: 1;
+            min-width: 280px;
+            background: #eaeaea;
+            border-radius: 28px;
+            padding: 20px;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        /* Contenedor de la columna del video */
+        .video-col {
+            flex: 1;
+            min-width: 280px;
+            background: #eaeaea;
+            border-radius: 28px;
+            padding: 12px;  /* reducido un poco */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Eliminamos height: 320px fijo */
+        }
+
+        /* Contenedor interno que envuelve al video (el div con position relative) */
+        .video-col > div {
+            width: 100%;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000;
+            /* Forzamos una relación de aspecto 16:9 (ajústala si tu video es diferente) */
+            aspect-ratio: 16 / 9;
+        }
+
+        /* El video mismo */
+        .video-col video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;  /* O contain si prefieres que no recorte */
+            display: block;
+            border-radius: 20px;
+        }
+        .list-col {
+            flex: 1;
+            background: #f9f9f9;
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        }
+        .list-col ul {
+            list-style: none;
+        }
+        .list-col li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1f1f1f;
+        }
+        .list-col i.fa-check-circle {
+            color: #FFA000;
+        }
+
+        /* TESTIMONIOS */
+        .testimonials-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        .testimonial-card {
+            background: #fef9e6;
+            border-left: 6px solid #FFD600;
+            border-radius: 24px;
+            padding: 28px;
+            max-width: 350px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        .testimonial-card i {
+            color: #FFA000;
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+        .testimonial-card p {
+            font-style: italic;
+            color: #333;
+        }
+        .testimonial-card h4 {
+            margin-top: 16px;
+            color: #FF6F00;
+        }
+
+        /* ¿Por qué nosotros? mantiene estilo */
+        .features {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .feature {
+            background: #faf7f0;
+            border-radius: 24px;
+            padding: 28px;
+            text-align: center;
+            max-width: 260px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .feature i {
+            font-size: 2.5rem;
+            color: #FFD600;
+        }
+        .feature h3 {
+            margin: 16px 0 8px;
+            color: #1f1f1f;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #0a0a0a;
+            color: #ccc;
+            padding: 48px 0 24px;
+        }
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 32px;
+        }
+        .footer-col h4 {
+            color: #FFD600;
+            margin-bottom: 16px;
+        }
+        .footer-col p, .footer-col a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin: 8px 0;
+        }
+        .footer-col a:hover {
+            color: #FFA000;
+        }
+        .social-icons {
+            display: flex;
+            gap: 20px;
+            margin-top: 16px;
+        }
+        .social-icons a {
+            font-size: 1.6rem;
+            color: #ccc;
+            transition: 0.2s;
+        }
+        .social-icons a:hover {
+            color: #FFD600;
+        }
+        .copyright {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid #222;
+            font-size: 0.8rem;
+        }
+        .list-col {
+            flex: 1;
+            min-width: 260px;
+            background: #f9f9f9;
+            border-radius: 28px;
+            padding: 24px;
+            align-self: stretch;  /* para que ambas columnas tengan la misma altura si gustas */
+        }
+        /* ========== RESPONSIVE (MÓVIL Y TABLET) ========== */
+        @media (max-width: 768px) {
+            nav {
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: nowrap;
+                padding: 12px 16px;
+            }
+            .logo {
+                flex: 1;
+            }
+            .brand-name {
+                font-size: 1rem;
+            }
+            .brand-sub {
+                font-size: 0.6rem;
+            }
+            .logo img {
+                height: 45px;
+            }
+            /* Mostrar botón hamburguesa en móvil */
+            .menu-hamburguesa {
+                display: block;
+                font-size: 1.6rem;
+                margin-left: auto;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                gap: 12px;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                background: #0a0a0a;
+                padding: 20px;
+                border-radius: 0 0 20px 20px;
+                z-index: 100;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-links a {
+                width: 100%;
+                text-align: center;
+                padding: 12px;
+            }
+            .btn-cta-nav {
+                width: 80%;
+                margin: 0 auto;
+            }
+            .hero {
+                padding: 40px 16px 60px;
+                min-height: 70vh;
+            }
+            .hero-content {
+                width: 95%;
+                padding: 24px 16px;
+            }
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+            .hero p {
+                font-size: 0.95rem;
+            }
+            .cobertura-busqueda {
+                flex-direction: column;
+                background: transparent;
+                gap: 12px;
+            }
+            .cobertura-busqueda input {
+                width: 100%;
+                background: #1e1e1e81;
+                border-radius: 60px;
+                padding: 12px 16px;
+            }
+            .cobertura-busqueda button {
+                width: 100%;
+            }
+            .services-two-columns, .coverage-two-columns {
+                flex-direction: column;
+            }
+            .video-col {
+                height: 220px;
+            }
+            .calculator-col {
+                margin-top: 0;
+            }
+            .service-header {
+                padding: 12px 16px;
+            }
+            .service-title {
+                font-size: 1rem;
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .social-icons {
+                justify-content: center;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .services-two-columns {
+                gap: 20px;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .video-col {
+                padding: 8px;  /* menos padding en móvil */
+            }
+            .video-col > div {
+                aspect-ratio: 16 / 9;  /* se mantiene la proporción */
+            }
+            .video-col video {
+                object-fit: cover;
+            }
+            /* el resto de tu responsive ya existe */
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="hero-canvas-container">
+        <canvas id="heroWaveCanvas"></canvas>
+    </div>
+    <nav>
+        <div class="logo">
+    <img src="assets/logo.png" alt="Logo">
+    <div class="logo-text">
+        <span class="brand-name">JIP</span>
+        <span class="brand-sub">Telecomunicaciones</span>
+    </div>
+</div>
+        <button class="menu-hamburguesa" id="menuToggle">
+    <i class="fas fa-bars"></i>
+</button>
+        <div class="nav-links" id="navLinks">
+            <a href="#">Inicio</a>
+            <a href="#servicios">Servicios</a>
+            <a href="#cobertura">Cobertura</a>
+            <a href="#nosotros">¿Por qué elegirnos?</a>
+            <a href="#" class="btn-cta-nav" id="navCtaPrincipal">Cotizar ahora</a>
+        </div>
+    </nav>
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Conectamos tu <span id="typed-word">Hogar</span></h1>
+            <p>Fibra óptica ultrarrápida en Piedecuesta.</p>
+            <p>Radio-enlace estable en la Mesa de los Santos.<br>Sin contratos de permanencia.<br>con soporte local.</p>
+            <div class="cobertura-busqueda">
+                <input type="text" id="searchBarrio" placeholder="Ej: La Inmaculada, Mesa de los Santos, Brisas..." autocomplete="off">
+                <button id="checkCoverageBtn">Verificar cobertura</button>
+            </div>
+            <div id="resultadoCobertura"></div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <!-- SERVICIOS: dos columnas (acordeón izquierda, calculadora derecha) -->
+    <section id="servicios">
+        <div class="container">
+            <h2 class="section-title">Nuestros servicios</h2>
+            <div class="services-two-columns">
+                <div class="accordion-col">
+                    <div class="services-grid">
+                        <!-- Fibra -->
+                        <div class="service-item">
+                            <div class="service-header">
+                                <div class="service-title"><i class="fas fa-tachometer-alt"></i> Fibra Óptica Premium</div>
+                                <div class="toggle-icon"><i class="fas fa-chevron-down"></i></div>
+                            </div>
+                            <div class="service-content">
+                                <p>Ofrecemos conexión a internet de alta velocidad mediante tecnología de fibra óptica, diseñada para brindar estabilidad, rapidez y una experiencia de navegación sin interrupciones. Nuestro servicio permite disfrutar de una conexión simétrica, ideal tanto para el hogar como para actividades que requieren alto rendimiento como streaming, videollamadas, trabajo remoto y gaming.<br>Con planes flexibles que se adaptan a tus necesidades, garantizamos una conexión confiable con alta calidad de servicio, permitiéndote navegar sin límites y con excelente desempeño en múltiples dispositivos al mismo tiempo.</p>
+                                <a href="#" class="btn-wa" data-wa-number="3143049755" data-wa-text="Hola, quiero contratar FIBRA ÓPTICA en mi hogar">Contratar ahora →</a>
+                            </div>
+                        </div>
+                        <!-- Radio -->
+                        <div class="service-item">
+                            <div class="service-header">
+                                <div class="service-title"><i class="fas fa-broadcast-tower"></i> Internet Rural (Radio)</div>
+                                <div class="toggle-icon"><i class="fas fa-chevron-down"></i></div>
+                            </div>
+                            <div class="service-content">
+                                <p>📡 Nuestro servicio de internet por radioenlace es la solución ideal para zonas donde la fibra óptica no tiene cobertura. Utilizamos tecnología inalámbrica de alto alcance para ofrecer una conexión estable y eficiente, incluso en áreas rurales o de difícil acceso.<br>Este servicio permite disfrutar de internet confiable con buena velocidad y continuidad, siendo una excelente alternativa para hogares, fincas o negocios que requieren conectividad constante. Nos enfocamos en brindar una instalación optimizada y un servicio de calidad garantizada, adaptado a las condiciones del entorno.</p>
+                                <a href="#" class="btn-wa" data-wa-number="3143049755" data-wa-text="Hola, necesito internet RURAL para mi finca">Cotizar radioenlace →</a>
+                            </div>
+                        </div>
+                        <!-- Todo en Uno -->
+                        <div class="service-item">
+                            <div class="service-header">
+                                <div class="service-title"><i class="fas fa-tv"></i> CCTV - Seguridad para tus espacios.</div>
+                                <div class="toggle-icon"><i class="fas fa-chevron-down"></i></div>
+                            </div>
+                            <div class="service-content">
+                                <p>Brindamos soluciones integrales en instalación de cámaras de seguridad para hogares, fincas y negocios, utilizando tecnología de última generación que garantiza vigilancia continua y acceso remoto en tiempo real.<br>Trabajamos con sistemas IP y análogos (HD), adaptándonos a cada necesidad. Implementamos equipos con grabación mediante NVR (Network Video Recorder) para cámaras IP y DVR (Digital Video Recorder) para sistemas tradicionales, asegurando almacenamiento seguro y reproducción clara de los eventos.<br>Nuestras soluciones permiten:<br>Visualización en vivo desde celular o computador<br>Grabación continua o por detección de movimiento<br>Acceso remoto desde cualquier lugar<br>Alta definición de imagen, incluso en condiciones de baja luz<br>Además, realizamos instalaciones optimizadas, configurando correctamente la red para garantizar estabilidad, seguridad y fácil acceso para el usuario.<br>Ofrecemos asesoría personalizada para definir la mejor cobertura según el espacio, con equipos modernos y confiables, pensados para brindar tranquilidad y control.</p>
+                                <a href="#" class="btn-wa" data-wa-number="3143049755" data-wa-text="Hola, quiero el plan TODO EN UNO">Ver promoción →</a>
+                            </div>
+                        </div>
+                        <!-- Mantenimiento -->
+                        <div class="service-item">
+                            <div class="service-header">
+                                <div class="service-title"><i class="fas fa-wrench"></i> Instalaciones electricas -.-> Industriales y Residenciales</div>
+                                <div class="toggle-icon"><i class="fas fa-chevron-down"></i></div>
+                            </div>
+                            <div class="service-content">
+                                <p>Ofrecemos servicios de instalación eléctrica para viviendas, comercios e industria, cumpliendo con estándares de seguridad y calidad. Realizamos montaje de redes eléctricas, tableros, cableado estructurado, iluminación y adecuaciones según cada necesidad.<br>Trabajamos con materiales certificados y garantizamos instalaciones seguras, eficientes y listas para soportar la demanda de equipos modernos, brindando confiabilidad y continuidad en el servicio eléctrico.</p>
+                                <a href="#" class="btn-wa" data-wa-number="3143049755" data-wa-text="Necesito soporte técnico o mantenimiento de red">Contactar soporte →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="calculator-col">
+                  <h3><i class="fas fa-calculator"></i> Calcula tu presupuesto</h3>
+                  <p>Completa el formulario y recibe una cotización personalizada por WhatsApp.</p>
+                  <form id="cotizacionForm" class="cotizacion-form">
+                      <input type="text" id="nombre" placeholder="Nombre completo *" required>
+                      <input type="email" id="email" placeholder="Correo electrónico *" required>
+                      <input type="tel" id="telefono" placeholder="Teléfono / WhatsApp *" required>
+                      <select id="paquete" required>
+                          <option value="">Selecciona tu paquete *</option>
+                          <option value="50 Mbps - $60.000/mes">50 Mbps - $60.000/mes</option>
+                          <option value="100 Mbps - $80.000/mes">100 Mbps - $80.000/mes</option>
+                          <option value="150 Mbps - $130.000/mes">150 Mbps - $130.000/mes</option>
+                          <option value="200 Mbps - $180.000/mes">200 Mbps - $180.000/mes</option>
+                          <option value="250 Mbps - $230.000/mes">250 Mbps - $230.000/mes</option>
+                          <option value="300 Mbps - $280.000/mes">300 Mbps - $280.000/mes</option>
+                      </select>
+                      <input type="text" id="direccion" placeholder="Dirección completa *" required>
+                      <textarea id="observaciones" rows="2" placeholder="Observaciones (opcional)"></textarea>
+                      <button type="submit" class="btn-cotizar">Obtener mi cotización →</button>
+                  </form>
+                  <p class="form-nota">* Campos obligatorios. Al enviar, un asesor te contactará vía WhatsApp.</p>
+              </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COBERTURA: video mapa a la izquierda, lista a la derecha -->
+    <section id="cobertura">
+        <div class="container">
+            <h2 class="section-title">Zonas con cobertura</h2>
+            <div class="coverage-two-columns">
+                <div class="video-col">
+    <div>
+        <video id="videoCobertura" width="100%" controls muted loop playsinline poster="assets/poster-cobertura.jpg">
+            <source src="assets/cobertura.mp4" type="video/mp4">
+            Tu navegador no soporta la reproducción de videos.
+        </video>
+        <div id="mensajeSonido" style="position: absolute; bottom: 60px; left: 16px; background: rgba(0,0,0,0.7); color: #FFD600; padding: 6px 12px; border-radius: 30px; font-size: 0.7rem; font-weight: 500; backdrop-filter: blur(4px); pointer-events: none; z-index: 5; display: flex; align-items: center; gap: 6px;">
+            <i class="fas fa-volume-mute"></i> 🔊 Haz clic en el altavoz para activar el sonido
+        </div>
+    </div>
+</div>
+                <div class="list-col">
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Colorados - Transpiedecuesta - la venta</li>
+                        <li><i class="fas fa-check-circle"></i> El guamo - Ciudad teyuna</li>
+                        <li><i class="fas fa-check-circle"></i> Villa marcela</li>
+                        <li><i class="fas fa-check-circle"></i> El guayabal</li>
+                        <li><i class="fas fa-check-circle"></i> Parcelacion Bosques de Acuarela</li>
+                        <li><i class="fas fa-wifi"></i> + Veredas en expansión, consulta la cobertura en tu ubicaciòn</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIOS nueva sección -->
+    <section id="testimonios" style="background: #f5f5f5;">
+        <div class="container">
+            <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left"></i>
+                    <p>"Vivimos en la vereda La Unión, Mesa de los Santos. Antes no teníamos señal confiable. Desde que contratamos ConectaRural+ trabajamos remoto sin interrupciones."</p>
+                    <h4>— María Fernanda R.</h4>
+                </div>
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left"></i>
+                    <p>"Excelente servicio al cliente y la fibra óptica es rapidísima. En mi negocio de Piedecuesta no se cae nunca la conexión. 100% recomendado."</p>
+                    <h4>— Carlos López</h4>
+                </div>
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left"></i>
+                    <p>"Por fin una empresa que entiende el campo. La instalación por radio fue rápida y ahora mi hijo puede tomar sus clases sin problemas."</p>
+                    <h4>— Gloria Martínez</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ¿Por qué nosotros? -->
+    <section id="nosotros">
+        <div class="container">
+            <h2 class="section-title">¿Por qué elegirnos?</h2>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Fibra + Radio</h3>
+                    <p>Tecnología dual para ciudad y campo.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-handshake"></i>
+                    <h3>Soporte local</h3>
+                    <p>Somos de Piedecuesta, entendemos tu necesidad.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-charging-station"></i>
+                    <h3>Sin permanencia</h3>
+                    <p>Contrato flexible, solo pagas lo que usas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>ConectaRural+</h4>
+                <p>Proveedor local de internet por fibra óptica y radiofrecuencia.</p>
+                <p><i class="fas fa-map-marker-alt"></i> Piedecuesta, Santander - Colombia</p>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto rápido</h4>
+                <p><i class="fab fa-whatsapp"></i> Ventas y Contabilidad: <strong>314 3049755</strong></p>
+                <p><i class="fab fa-whatsapp"></i> Soporte técnico: <strong>314 3049755</strong></p>
+            </div>
+            <div class="footer-col">
+                <h4>Síguenos</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2026 ConectaRural+ - Conectando la Mesa de los Santos con el futuro.
+        </div>
+    </div>
+</footer>
+
+<script>
+// ========== CANVAS ONDAS (INTERMEDIO) ==========
+const canvas = document.getElementById('heroWaveCanvas');
+let ctx = canvas.getContext('2d');
+let width, height;
+let centerX, centerY;
+let maxRadius;
+let animFrame;
+let startTime = null;
+const cycleDuration = 2400; // un pelín más lento que el muy rápido
+
+function resizeAndSetOrigin() {
+    const container = canvas.parentElement;
+    width = container.clientWidth;
+    height = container.clientHeight;
+    canvas.width = width;
+    canvas.height = height;
+    centerX = width * 0.85;
+    centerY = height * 0.3;
+    maxRadius = Math.sqrt(width * width + height * height) + 120;
+}
+
+function drawWave(now) {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, width, height);
+    // Sin sombra glow
+    ctx.shadowBlur = 0;
+    
+    const elapsed = (now - startTime) % cycleDuration;
+    let t = elapsed / cycleDuration;
+    
+    // Solo 3 anillos
+    for (let i = 0; i < 3; i++) {
+        let delay = i * 0.1;
+        let t2 = (t - delay + 1) % 1;
+        let r = maxRadius * Math.pow(t2, 1.1);
+        let opacity = Math.max(0, 1 - t2 * 1.3); // fade más rápido
+        let lineWidth = 9 * (1 - t2 * 0.7);
+        
+        if (t2 < 0.95 && r > 8) {
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, r, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(255, 214, 0, ${opacity * 0.7})`;
+            ctx.lineWidth = lineWidth;
+            ctx.stroke();
+            // Segundo trazo tenue
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, r - 2, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(255, 166, 0, ${opacity * 0.4})`;
+            ctx.lineWidth = lineWidth * 0.6;
+            ctx.stroke();
+        }
+    }
+    
+    // Gota central más pequeña
+    if (t < 0.18) {
+        let pulse = Math.sin(t * Math.PI * 8) * 2;
+        let dropSize = 8 + pulse;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, dropSize, 0, 2 * Math.PI);
+        ctx.fillStyle = `rgba(255, 230, 0, ${1 - t * 4})`;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, dropSize * 0.3, 0, 2 * Math.PI);
+        ctx.fillStyle = `rgba(255, 255, 200, 0.7)`;
+        ctx.fill();
+    } else {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = `rgba(255, 200, 0, 0.3)`;
+        ctx.fill();
+    }
+    
+    animFrame = requestAnimationFrame(drawWave);
+}
+
+function initCanvas() {
+    resizeAndSetOrigin();
+    window.addEventListener('resize', () => resizeAndSetOrigin());
+    startTime = performance.now();
+    animFrame = requestAnimationFrame(drawWave);
+}
+initCanvas();
+
+// ========== ACORDEÓN - solo una tarjeta abierta a la vez ==========
+const serviceItems = document.querySelectorAll('.service-item');
+
+serviceItems.forEach(item => {
+    const header = item.querySelector('.service-header');
+    const content = item.querySelector('.service-content');
+    const icon = header.querySelector('.toggle-icon i');
+    
+    header.addEventListener('click', () => {
+        const isCurrentlyOpen = content.classList.contains('show');
+        
+        // Cerrar todas las tarjetas
+        serviceItems.forEach(otherItem => {
+            const otherContent = otherItem.querySelector('.service-content');
+            const otherIcon = otherItem.querySelector('.toggle-icon i');
+            if (otherContent.classList.contains('show')) {
+                otherContent.classList.remove('show');
+                otherIcon.classList.remove('fa-chevron-up');
+                otherIcon.classList.add('fa-chevron-down');
+            }
+        });
+        
+        // Si la que se clickeó NO estaba abierta, la abrimos
+        if (!isCurrentlyOpen) {
+            content.classList.add('show');
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        }
+        // Si ya estaba abierta, la dejamos cerrada (ya se cerró en el paso anterior)
+    });
+});
+
+    // ========== MÁQUINA DE ESCRIBIR ==========
+    const typedSpan = document.getElementById('typed-word');
+    const words = ['Hogar', 'Empresa', 'Campo'];
+    let idxWord = 0, idxChar = 0, isDeleting = false;
+    function typeEffect() {
+        const currentWord = words[idxWord];
+        if (isDeleting) {
+            typedSpan.textContent = currentWord.substring(0, idxChar - 1);
+            idxChar--;
+        } else {
+            typedSpan.textContent = currentWord.substring(0, idxChar + 1);
+            idxChar++;
+        }
+        if (!isDeleting && idxChar === currentWord.length) {
+            isDeleting = true;
+            setTimeout(typeEffect, 1800);
+            return;
+        }
+        if (isDeleting && idxChar === 0) {
+            isDeleting = false;
+            idxWord = (idxWord + 1) % words.length;
+            setTimeout(typeEffect, 300);
+            return;
+        }
+        setTimeout(typeEffect, isDeleting ? 60 : 120);
+    }
+    typeEffect();
+
+    // ========== WHATSAPP ==========
+    function setupWhatsApp() {
+        document.querySelectorAll('[data-wa-number]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                let phone = btn.getAttribute('data-wa-number');
+                let msg = btn.getAttribute('data-wa-text') || "Hola, necesito información.";
+                window.open(`https://wa.me/57${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            });
+        });
+        document.querySelectorAll('.btn-cta-nav, .btn-primary:not([data-wa-number])').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open('https://wa.me/573143049755?text=Hola%20quiero%20cotizar%20internet', '_blank');
+            });
+        });
+    }
+    setupWhatsApp();
+
+    // ========== BUSCADOR COBERTURA ==========
+    const coverageDB = {
+        "la inmaculada": "🟢 Fibra Óptica disponible hasta 1000 Mbps.",
+        "brisas del río": "🟢 ¡Fibra óptica lista!",
+        "la colina": "🟢 Fibra óptica disponible.",
+        "mesa de los santos": "🟡 Internet por Radiofrecuencia de alta velocidad (hasta 200 Mbps).",
+        "el carreño": "🟡 Cobertura rural por radio.",
+        "vereda la unión": "🟡 Internet rural con tecnología WISP.",
+        "piedecuesta centro": "🟢 Fibra óptica + planes combo.",
+        "default": "🔴 Estamos expandiendo nuestra red. ¡Déjanos tus datos en WhatsApp!"
+    };
+    document.getElementById('checkCoverageBtn').addEventListener('click', () => {
+        const input = document.getElementById('searchBarrio').value.trim().toLowerCase();
+        const resultDiv = document.getElementById('resultadoCobertura');
+        if (!input) { resultDiv.innerHTML = "📌 Escribe el nombre de tu barrio o vereda."; return; }
+        let found = false;
+        for (const [key, val] of Object.entries(coverageDB)) {
+            if (input.includes(key) || key.includes(input)) {
+                resultDiv.innerHTML = `<span style="background:#FFA00020; padding:8px 16px; border-radius:40px;">✅ ${val}</span>`;
+                found = true; break;
+            }
+        }
+        if (!found) resultDiv.innerHTML = `<span style="color:#FFA000;">🔍 ${coverageDB.default}</span>`;
+    });
+
+    // smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+        });
+    });
+    // Menú hamburguesa para móvil
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+
+if (menuToggle && navLinks) {
+    menuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
+}
+// Cerrar menú al hacer clic en un enlace
+const links = navLinks.querySelectorAll('a');
+links.forEach(link => {
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+    });
+});
+// ========== CALCULADORA - FORMULARIO COTIZACIÓN ==========
+const form = document.getElementById('cotizacionForm');
+if (form) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Obtener valores
+        const nombre = document.getElementById('nombre').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const telefono = document.getElementById('telefono').value.trim();
+        const paquete = document.getElementById('paquete').value;
+        const direccion = document.getElementById('direccion').value.trim();
+        const observaciones = document.getElementById('observaciones').value.trim();
+        
+        // Validar campos obligatorios
+        if (!nombre || !email || !telefono || !paquete || !direccion) {
+            alert('❌ Por favor completa todos los campos obligatorios (*).');
+            return;
+        }
+        
+        // Validar formato de email simple
+        if (!email.includes('@') || !email.includes('.')) {
+            alert('❌ Ingresa un correo electrónico válido.');
+            return;
+        }
+        
+        // Construir mensaje para WhatsApp con saltos de línea
+        let mensaje = `📋 *NUEVA COTIZACIÓN - JIP TELECOMUNICACIONES* 📋%0A%0A`; // %0A es salto de línea en URL
+        mensaje += `*Nombre:* ${nombre}%0A`;
+        mensaje += `*Email:* ${email}%0A`;
+        mensaje += `*Teléfono/WhatsApp:* ${telefono}%0A`;
+        mensaje += `*Paquete seleccionado:* ${paquete}%0A`;
+        mensaje += `*Dirección:* ${direccion}%0A`;
+        if (observaciones) {
+            mensaje += `*Observaciones:* ${observaciones}%0A`;
+        }
+        mensaje += `%0A*📌 Por favor contactarme para agendar la visita técnica.*`;
+        
+        // Número fijo de WhatsApp (sin 57 porque ya lo agregaremos)
+        const numero = '3143049755';
+        const url = `https://wa.me/57${numero}?text=${mensaje}`;
+        
+        // Abrir WhatsApp
+        window.open(url, '_blank');
+    });
+}
+    // Ocultar mensaje del video después de 5 segundos o al interactuar
+    const video = document.getElementById('videoCobertura');
+    const mensaje = document.getElementById('mensajeSonido');
+    if (video && mensaje) {
+        setTimeout(() => { if(mensaje) mensaje.style.opacity = '0'; setTimeout(() => { if(mensaje) mensaje.style.display = 'none'; }, 1000); }, 5000);
+        video.addEventListener('play', () => { if(mensaje) mensaje.style.display = 'none'; });
+        video.addEventListener('click', () => { if(mensaje) mensaje.style.display = 'none'; });
+    }
+</script>
+</body>
+</html>
